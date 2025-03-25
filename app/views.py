@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import TeamRegistrationForm
+from .forms import TeamRegistrationForm, MatchForm
 from django.contrib.auth import authenticate, login, logout
 import json
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from .models import TeamUser
+from .models import TeamUser, Match
+from django.utils.timezone import now
+
 
 # Create your views here.
 def dashboard(request):
@@ -61,3 +63,44 @@ def logout_user(request):
     logout(request)
     messages.success(request, 'Logged out successfully')
     return redirect('login')
+
+def teams(request):
+    teams = TeamUser.objects.all()
+    return render(request, 'teams.html', {'page': {'title': 'Teams'}, 'teams': teams})
+
+def matches(request):
+    friendly_requests = Match.objects.filter(
+        away_team__isnull=True,
+        match_date__gt=now()
+    )
+    return render(request, 'matches.html', {'page': {'title': 'Matches'}, 'friendly_requests': friendly_requests})
+
+@login_required(login_url='login')
+def create_friendly_match(request):
+    match = MatchForm()
+    if request.method == 'POST':
+        match_data = {
+            'home_team': request.user.id,
+            'match_date': request.POST.get('match_date'),
+            'venue': request.POST.get('venue')
+        }
+        match = MatchForm(match_data)
+        if match.is_valid():
+            match.save()
+            messages.success(request, 'Match created successfully')
+            return redirect('matches')
+        else:
+            errors = json.loads(match.errors.as_json())
+            for msg in errors:
+                messages.error(request, f"{msg}: {errors[msg][0]['message']}")
+            return redirect('matches')
+
+def accept_friendly_request(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    if match.home_team == request.user:
+        messages.error(request, "You cannot accept your own match request.")
+        return redirect('matches')
+    match.away_team = request.user
+    match.save()
+    messages.success(request, 'Match request accepted')
+    return redirect('matches')

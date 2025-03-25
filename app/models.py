@@ -51,3 +51,19 @@ class TeamUser(AbstractUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return True
+
+class Match(models.Model):
+    home_team = models.ForeignKey(
+        TeamUser, on_delete=models.CASCADE, related_name='home_team')
+    away_team = models.ForeignKey(
+        TeamUser, on_delete=models.CASCADE, related_name='away_team', null=True)
+    home_goals = models.IntegerField(default=0)
+    away_goals = models.IntegerField(default=0)
+    match_date = models.DateTimeField(default=datetime.now() + timedelta(days=1))
+    venue = models.CharField(max_length=100, default='Stadium')
+
+    def __str__(self):
+        return f'{self.home_team.team_name} vs {self.away_team.team_name}'
+
+    class Meta:
+        ordering = ['-match_date']

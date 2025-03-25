@@ -1,0 +1,92 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Football Match Organizer</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body class="bg-gray-50 font-serif leading-normal tracking-normal">
+		{% include 'partials/navbar.html' %}
+        <div class="bg-slate-100 text-gray-700 py-4">
+            <div class="container mx-auto px-4 flex flex-col items-center justify-center">
+                <h1 class="text-2xl font-bold">Home</h1>
+                <nav class="mt-2">
+                    <ol class="list-reset flex text-sm">
+                        <li><a href="/" class="text-gray-800 hover:underline">Home</a></li>
+                        <li><span class="mx-2">/</span></li>
+                        <li class="text-gray-700">Dashboard</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 py-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                    <img class="w-full h-48 object-cover" src="{% static 'images/harambee-stars.png' %}" alt="Team Logo">
+                    <div class="p-4">
+                        <h2 class="text-xl font-bold mb-2">Team Name</h2>
+                        <p class="text-gray-600">Location: City, Country</p>
+                        <p class="text-gray-600">Founded: 1990</p>
+                    </div>
+                </div>
+                <div class="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                    <img class="w-full h-48 object-cover" src="{% static 'images/harambee-stars.png' %}" alt="Team Logo">
+                    <div class="p-4">
+                        <h2 class="text-xl font-bold mb-2">Team Name</h2>
+                        <p class="text-gray-600">Location: City, Country</p>
+                        <p class="text-gray-600">Founded: 1990</p>
+                    </div>
+                </div>
+                <div class="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
+                    <img class="w-full h-48 object-cover" src="{% static 'images/harambee-stars.png' %}" alt="Team Logo">
+                    <div class="p-4">
+                        <h2 class="text-xl font-bold mb-2">Team Name</h2>
+                        <p class="text-gray-600">Location: City, Country</p>
+                        <p class="text-gray-600">Founded: 1990</p>
+                    </div>
+                </div>
+            </div>
+            <div class="my-8 bg-slate-100 p-6 rounded-lg relative text-center min-h-48">
+                <div class="absolute inset-0">
+                    <img class="w-full h-full object-cover opacity-60 rounded-lg" src="{% static 'images/league.jpeg' %}" alt="Register Team">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center rounded-lg">
+                    <h2 class="text-2xl font-bold text-white mb-4">Register Your Team Today!</h2>
+                    <p class="text-white mb-4">Getting started is as simple as one, two, three. Join the league and showcase your team's talent!</p>
+                    <a href="/register" class="bg-slate-800 text-white px-6 py-2 rounded-lg shadow-md hover:bg-slate-900 transition duration-300">Get Started</a>
+                </div>
+            </div>
+            <div class="my-8">
+                <h2 class="text-2xl font-bold text-center mb-6">Our Partners</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
+                    <div class="flex justify-center">
+                        <img class="h-16 object-contain" src="{% static 'images/partner1.png' %}" alt="Partner 1">
+                    </div>
+                    <div class="flex justify-center">
+                        <img class="h-16 object-contain" src="{% static 'images/partner2.jpeg' %}" alt="Partner 2">
+                    </div>
+                    <div class="flex justify-center">
+                        <img class="h-16 object-contain" src="{% static 'images/partner3.jpeg' %}" alt="Partner 3">
+                    </div>
+                    <div class="flex justify-center">
+                        <img class="h-16 object-contain" src="{% static 'images/partner4.png' %}" alt="Partner 4">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-sm">&copy; 2023 Football Match Organizer. All rights reserved.</p>
+                <div class="mt-2">
+                    <a href="/privacy-policy" class="text-gray-400 hover:text-white mx-2">Privacy Policy</a>
+                    <a href="/terms-of-service" class="text-gray-400 hover:text-white mx-2">Terms of Service</a>
+                    <a href="/contact" class="text-gray-400 hover:text-white mx-2">Contact Us</a>
+                </div>
+            </div>
+        </footer>
+	</body>
+</html>

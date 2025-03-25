@@ -1,0 +1,12 @@
+ <div class="bg-slate-100 text-gray-700 py-4">
+            <div class="container mx-auto px-4 flex flex-col items-center justify-center">
+                <h1 class="text-2xl font-bold">{{page.title}}</h1>
+                <nav class="mt-2">
+                    <ol class="list-reset flex text-sm">
+                        <li><a href="{% url 'home' %}" class="text-gray-800 hover:underline">Home</a></li>
+                        <li><span class="mx-2">/</span></li>
+                        <li class="text-gray-700">{{page.title}}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>

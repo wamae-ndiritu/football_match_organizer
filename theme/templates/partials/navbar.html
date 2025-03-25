@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
-                <a href="#" class="text-white text-lg font-bold">Match Organizer</a>
+                <a href="{% url 'home' %}" class="text-white text-lg font-bold">Match Organizer</a>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Teams</a>
@@ -14,8 +14,8 @@
             <div class="hidden md:block">
                 <div class="ml-4 flex items-center md:ml-6">
                     {% if user.is_authenticated %}
-                        <span class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Hello, {{ user.username }}</span>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+                        <span class="text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Hello, {{ user.team_name }}</span>
+                        <a href="{% url 'logout' %}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
                     {% else %}
                         <a href="{% url 'login' %}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>
                         <a href="{% url 'register' %}" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Register</a>
@@ -39,8 +39,8 @@
             <a href="#" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Matches</a>
             <a href="#" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Results</a>
             {% if user.is_authenticated %}
-                <span class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Hello, {{ user.username }}</span>
-                <a href="#" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
+                <span class="text-gray-300 block px-3 py-2 rounded-md text-base font-medium">Hello, {{ user.team_name }}</span>
+                <a href="{% url 'logout' %}" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Logout</a>
             {% else %}
                 <a href="{% url 'login' %}" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Login</a>
                 <a href="{% url 'register' %}" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Register</a>

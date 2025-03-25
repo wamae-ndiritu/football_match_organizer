@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django_browser_reload'
 ]
 
+AUTH_USER_MODEL = 'app.TeamUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

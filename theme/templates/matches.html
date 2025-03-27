@@ -2,15 +2,20 @@
 {% load static %}
 {% block content %}
 <div class="container mx-auto px-4 py-6">
-    <!-- Upcoming Matches Section -->
-    <h1 class="text-2xl font-bold mb-4">Friendly Match Requests</h1>
+    <div class="flex flex-col md:flex-row justify-between md:items-center mb-4">
+        <h1 class="my-4"><span class="text-2xl font-bold mt-8">Friendly Match Requests</span> {% if friendly_requests %}({{ friendly_requests|length }}){% endif %}</h1>
+        <button id="openModal" class="bg-slate-600 text-white font-bold py-2 px-4 rounded hover:bg-slate-700">
+            Open Friend Request Form
+        </button>
+    </div>
+    {% if friendly_requests %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for match in friendly_requests %}
         <div
             class="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
             <div class="px-4 py-2 relative">
                 <img class="w-full h-32 object-cover" src="{{ match.home_team.team_logo.url }}" alt="Team Logo">
-                <h2 class="text-xl font-bold mb-2">{{ match.home_team.team_name }} vs {{ match.away_team.team_name }}</h2>
+                <h2 class="text-xl font-bold mb-2">{{ match.home_team.team_name }}</h2>
                 <p class="text-gray-600">Venue: {{ match.venue }}</p>
                 <p class="text-gray-600">Date & Time: {{ match.match_date }}</p>
                 <span class="absolute top-2 right-2 inline-block bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">Friendly Request</span>
@@ -23,37 +28,117 @@
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex flex-col items-center justify-center" role="alert">
+        <strong class="font-bold">No Friendly Match Requests!</strong>
+        <span class="block sm:inline">No friendly match requests available at the moment.</span>
+    </div>
+    {% endif %}
 
-    <!-- Previous Matches Section -->
-    <h1 class="text-2xl font-bold mt-8 mb-4">Previous Matches</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for match in previous_matches %}
+    <!-- Upcoming Matches Section -->
+    <h1 class="my-4"><span class="text-2xl font-bold mt-8">Upcoming Matches</span> {% if upcoming_matches %}({{ upcoming_matches|length }}){% endif %}</h1>
+    {% if upcoming_matches %}
+        <div class="flex gap-3 flex-wrap">
+        {% for match in upcoming_matches %}
         <div
-            class="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
-            <div class="p-4">
-                <h2 class="text-xl font-bold mb-2">{{ match.player_a }} vs {{ match.player_b }}</h2>
-                <p class="text-gray-600">Venue: {{ match.venue }}</p>
-                <p class="text-gray-600">Date & Time: {{ match.date_time }}</p>
-                <p class="text-gray-600">Result: {{ match.result }}</p>
+            class="w-full bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
+            <div class="p-4 relative">
+               <div class="flex justify-between mt-12">
+                 <div class="flex flex-col space-y-2">
+                    <img class="h-[80px] object-contain" src="{{ match.home_team.team_logo.url }}" alt="{{ match.home_team.team_name }}">
+                     <h2 class="text-xl font-bold mb-2">{{ match.home_team.team_name }}</h2>
+                 </div>
+                 <h2 class="text-3xl text-blue-500 my-auto">Vs</h2>
+                 <div class="flex flex-col space-y-2">
+                    <img class="h-[80px] object-contain" src="{{ match.away_team.team_logo.url }}" alt="{{ match.away_team.team_name }}">
+                     <h2 class="text-xl font-bold mb-2">{{ match.away_team.team_name }}</h2>
+                 </div>
+               </div>
+                <p class="absolute top-9 left-2 lg:left-[85%] lg:top-2 lg:right-2 bg-blue-500 text-white rounded-md px-2">Venue: {{ match.venue }}</p>
+                <p class="absolute top-2 left-2 bg-green-500 text-white rounded-md px-2">Date & Time: {{ match.match_date }}</p>
             </div>
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex flex-col items-center justify-center" role="alert">
+        <strong class="font-bold">No Upcoming Matches!</strong>
+        <span class="block sm:inline">No upcoming matches available at the moment.</span>
+    </div>
+    {% endif %}
+    <!-- Previous Matches Section -->
+    <h1 class="my-4"><span class="text-2xl font-bold mt-8">Previous Matches</span> {% if previous_matches %}({{ previous_matches|length }}){% endif %}</h1>
+    {% if previous_matches %}
+        <div class="flex gap-3 flex-wrap">
+        {% for match in previous_matches %}
+        <div
+            class="w-full bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
+            <div class="p-4 relative">
+               <div class="flex justify-between mt-12">
+                 <div class="flex flex-col space-y-2">
+                    <img class="h-[80px] object-contain" src="{{ match.home_team.team_logo.url }}" alt="{{ match.home_team.team_name }}">
+                     <h2 class="text-xl font-bold mb-2">{{ match.home_team.team_name }}</h2>
+                 </div>
+                 <h2 class="text-3xl text-blue-500 my-auto">Vs</h2>
+                 <div class="flex flex-col space-y-2">
+                    <img class="h-[80px] object-contain" src="{{ match.away_team.team_logo.url }}" alt="{{ match.away_team.team_name }}">
+                     <h2 class="text-xl font-bold mb-2">{{ match.away_team.team_name }}</h2>
+                 </div>
+               </div>
+                <p class="absolute top-9 left-2 lg:left-[85%] lg:top-2 lg:right-2 bg-blue-500 text-white rounded-md px-2">Venue: {{ match.venue }}</p>
+                <p class="absolute top-2 left-2 bg-green-500 text-white rounded-md px-2">Date & Time: {{ match.match_date }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative flex flex-col items-center justify-center" role="alert">
+            <strong class="font-bold">No Previous Matches!</strong>
+            <span class="block sm:inline">No previous matches available at the moment.</span>
+        </div>
+    {% endif %}
 
-    <!-- Friend Request Form -->
-    <h1 class="text-2xl font-bold mt-8 mb-4">Initiate a Friend Request</h1>
-    <form method="post" action="{% url 'friendly_match_request' %}" class="bg-white shadow-md rounded-lg p-6">
-        {% csrf_token %}
-        <div class="mb-4">
-            <label for="date_time" class="block text-gray-700 font-bold mb-2">Date & Time</label>
-            <input type="datetime-local" id="date_time" name="match_date" class="w-full border-gray-300 rounded-lg">
+    <!-- Friend Request Modal -->
+    <div id="friendRequestModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Create Friendly Match Request</h2>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
+            </div>
+            <form method="post" action="{% url 'friendly_match_request' %}">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="date_time" class="block text-gray-700 font-bold mb-2">Date & Time</label>
+                    <input type="datetime-local" id="date_time" name="match_date" class="w-full border-gray-300 rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label for="venue" class="block text-gray-700 font-bold mb-2">Venue</label>
+                    <input type="text" id="venue" name="venue" class="w-full border-gray-300 rounded-lg" required>
+                </div>
+                <button type="submit"
+                    class="w-full bg-slate-600 text-white font-bold py-2 px-4 rounded hover:bg-slate-700">Submit</button>
+            </form>
         </div>
-        <div class="mb-4">
-            <label for="venue" class="block text-gray-700 font-bold mb-2">Venue</label>
-            <input type="text" id="venue" name="venue" class="w-full border-gray-300 rounded-lg">
-        </div>
-        <button type="submit"
-            class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">Submit</button>
-    </form>
+    </div>
+
+    <script>
+        const openModal = document.getElementById('openModal');
+        const closeModal = document.getElementById('closeModal');
+        const modal = document.getElementById('friendRequestModal');
+
+        openModal.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    </script>
 </div>
 {% endblock %}

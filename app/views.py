@@ -71,9 +71,19 @@ def teams(request):
 def matches(request):
     friendly_requests = Match.objects.filter(
         away_team__isnull=True,
-        match_date__gt=now()
+        # match_date__gt=now()
     )
-    return render(request, 'matches.html', {'page': {'title': 'Matches'}, 'friendly_requests': friendly_requests})
+    upcoming_matches = Match.objects.filter(
+        match_date__gt=now(),
+        home_team__isnull=False,
+        away_team__isnull=False
+    )
+    previous_matches = Match.objects.filter(
+        match_date__lt=now(),
+        home_team__isnull=False,
+        away_team__isnull=False
+    )
+    return render(request, 'matches.html', {'page': {'title': 'Matches'}, 'friendly_requests': friendly_requests, 'upcoming_matches': upcoming_matches, 'previous_matches': previous_matches})
 
 @login_required(login_url='login')
 def create_friendly_match(request):
@@ -95,6 +105,8 @@ def create_friendly_match(request):
                 messages.error(request, f"{msg}: {errors[msg][0]['message']}")
             return redirect('matches')
 
+
+@login_required(login_url='login')
 def accept_friendly_request(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
     if match.home_team == request.user:

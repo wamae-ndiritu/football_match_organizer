@@ -43,15 +43,15 @@
         <div
             class="w-full bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
             <div class="p-4 relative">
-               <div class="flex justify-between mt-12">
+               <div class="flex justify-between mt-14 lg:mt-12">
                  <div class="flex flex-col space-y-2">
-                    <img class="h-[80px] object-contain" src="{{ match.home_team.team_logo.url }}" alt="{{ match.home_team.team_name }}">
-                     <h2 class="text-xl font-bold mb-2">{{ match.home_team.team_name }}</h2>
+                    <img class="h-[40px] md:h-[80px] object-contain" src="{{ match.home_team.team_logo.url }}" alt="{{ match.home_team.team_name }}">
+                     <h2 class="text-center lg:text-left md:text-xl font-bold mb-2">{{ match.home_team.team_name }}</h2>
                  </div>
                  <h2 class="text-3xl text-blue-500 my-auto">Vs</h2>
                  <div class="flex flex-col space-y-2">
-                    <img class="h-[80px] object-contain" src="{{ match.away_team.team_logo.url }}" alt="{{ match.away_team.team_name }}">
-                     <h2 class="text-xl font-bold mb-2">{{ match.away_team.team_name }}</h2>
+                    <img class="h-[40px] lg:h-[80px] object-contain" src="{{ match.away_team.team_logo.url }}" alt="{{ match.away_team.team_name }}">
+                     <h2 class="text-center lg:text-left md:text-xl font-bold mb-2">{{ match.away_team.team_name }}</h2>
                  </div>
                </div>
                 <p class="absolute top-9 left-2 lg:left-[85%] lg:top-2 lg:right-2 bg-blue-500 text-white rounded-md px-2">Venue: {{ match.venue }}</p>
@@ -74,21 +74,55 @@
         <div
             class="w-full bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg">
             <div class="p-4 relative">
-               <div class="flex justify-between mt-12">
+               <div class="flex justify-between mt-14 lg:mt-12">
                  <div class="flex flex-col space-y-2">
-                    <img class="h-[80px] object-contain" src="{{ match.home_team.team_logo.url }}" alt="{{ match.home_team.team_name }}">
-                     <h2 class="text-xl font-bold mb-2">{{ match.home_team.team_name }}</h2>
+                    <img class="h-[40px] lg:h-[80px] object-contain" src="{{ match.home_team.team_logo.url }}" alt="{{ match.home_team.team_name }}">
+                     <h2 class="text-center lg:text-left md:text-xl font-bold mb-2">{{ match.home_team.team_name }}</h2>
                  </div>
-                 <h2 class="text-3xl text-blue-500 my-auto">Vs</h2>
+                 <div class="flex flex-col items-center justify-center">
+                    <h2 class="text-3xl text-blue-500">Vs</h2>
+                    <p class="text-3xl lg:text-5xl font-bold text-green-500">{{ match.home_goals }} - {{ match.away_goals }}</p>
+                 </div>
                  <div class="flex flex-col space-y-2">
-                    <img class="h-[80px] object-contain" src="{{ match.away_team.team_logo.url }}" alt="{{ match.away_team.team_name }}">
-                     <h2 class="text-xl font-bold mb-2">{{ match.away_team.team_name }}</h2>
+                    <img class="h-[40px] lg:h-[80px] object-contain" src="{{ match.away_team.team_logo.url }}" alt="{{ match.away_team.team_name }}">
+                     <h2 class="text-center lg:text-left md:text-xl font-bold mb-2">{{ match.away_team.team_name }}</h2>
                  </div>
                </div>
                 <p class="absolute top-9 left-2 lg:left-[85%] lg:top-2 lg:right-2 bg-blue-500 text-white rounded-md px-2">Venue: {{ match.venue }}</p>
                 <p class="absolute top-2 left-2 bg-green-500 text-white rounded-md px-2">Date & Time: {{ match.match_date }}</p>
+                {% if match.home_team.id == request.user.id or match.away_team.id == request.user.id %}
+                    <a href="{% url 'matches' %}?match_id={{ match.id }}&home_score={{ match.home_goals }}&away_score={{ match.away_goals }}" class="editMatchButton block text-center mt-3 w-full bg-yellow-500 text-white font-bold py-2 px-4 rounded hover:bg-yellow-600">Edit</a>
+                {% endif %}
             </div>
         </div>
+        <!-- Edit Match Modal -->
+    <div id="editMatchModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Edit Match Scores</h2>
+                <button id="closeEditModal" class="text-gray-500 hover:text-gray-700">&times;</button>
+            </div>
+            <div class="mb-3">
+                <p class="text-gray-700"><strong>Match:</strong> <span>{{ match.home_team.team_name }} <span class="text-blue-500 text-xl">Vs</span> {{ match.away_team.team_name }}</span></p>
+                <p class="text-gray-700"><strong>Date & Time:</strong> <span>{{ match.match_date}}</span></p>
+                <p class="text-gray-700"><strong>Venue:</strong> <span>{{ match.venue }}</span></p>
+            </div>
+            <form method="post" action="{% url 'update_match_scores' match_id=match.id %}">
+                {% csrf_token %}
+                <input type="hidden" id="matchId" name="match_id">
+                <div class="mb-4">
+                    <label for="homeScore" class="block text-gray-700 font-bold mb-2">Home Team Score</label>
+                    <input type="number" id="homeScore" name="home_goals" class="w-full border-gray-300 rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label for="awayScore" class="block text-gray-700 font-bold mb-2">Away Team Score</label>
+                    <input type="number" id="awayScore" name="away_goals" class="w-full border-gray-300 rounded-lg" required>
+                </div>
+                <button type="submit"
+                    class="w-full bg-slate-600 text-white font-bold py-2 px-4 rounded hover:bg-slate-700">Update</button>
+            </form>
+        </div>
+    </div>
         {% endfor %}
     </div>
     {% else %}
@@ -97,6 +131,36 @@
             <span class="block sm:inline">No previous matches available at the moment.</span>
         </div>
     {% endif %}
+    <script>
+        const editModal = document.getElementById('editMatchModal');
+        const closeEditModal = document.getElementById('closeEditModal');
+        const matchIdInput = document.getElementById('matchId');
+        const homeScoreInput = document.getElementById('homeScore');
+        const awayScoreInput = document.getElementById('awayScore');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const matchId = urlParams.get('match_id');
+        const homeScore = urlParams.get('home_score');
+        const awayScore = urlParams.get('away_score');
+
+        if (matchId) {
+            matchIdInput.value = matchId;
+            homeScoreInput.value = homeScore;
+            awayScoreInput.value = awayScore;
+
+            editModal.classList.remove('hidden');
+        }
+
+        closeEditModal.addEventListener('click', () => {
+            editModal.classList.add('hidden');
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                editModal.classList.add('hidden');
+            }
+        });
+    </script>
 
     <!-- Friend Request Modal -->
     <div id="friendRequestModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">

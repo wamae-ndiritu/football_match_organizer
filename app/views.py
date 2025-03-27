@@ -71,7 +71,7 @@ def teams(request):
 def matches(request):
     friendly_requests = Match.objects.filter(
         away_team__isnull=True,
-        # match_date__gt=now()
+        match_date__gt=now()
     )
     upcoming_matches = Match.objects.filter(
         match_date__gt=now(),
@@ -83,6 +83,7 @@ def matches(request):
         home_team__isnull=False,
         away_team__isnull=False
     )
+
     return render(request, 'matches.html', {'page': {'title': 'Matches'}, 'friendly_requests': friendly_requests, 'upcoming_matches': upcoming_matches, 'previous_matches': previous_matches})
 
 @login_required(login_url='login')
@@ -116,3 +117,18 @@ def accept_friendly_request(request, match_id):
     match.save()
     messages.success(request, 'Match request accepted')
     return redirect('matches')
+
+@login_required(login_url='login')
+def update_match_scores(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    if request.method == 'POST':
+        home_goals = request.POST.get('home_goals')
+        away_goals = request.POST.get('away_goals')
+        match.home_goals = home_goals
+        match.away_goals = away_goals
+        if not home_goals or not away_goals:
+            messages.error(request, 'Please provide scores for both teams')
+            return redirect('matches')
+        match.save()
+        messages.success(request, 'Match updated successfully')
+        return redirect('matches')
